@@ -1,0 +1,36 @@
+LIBRARY IEEE;
+
+USE IEEE.STD_LOGIC_1164.ALL;
+USE IEEE.STD_LOGIC_ARITH.ALL;
+USE IEEE.STD_LOGIC_UNSIGNED.ALL;
+
+
+ENTITY hamming_code is
+  PORT (input_data: IN STD_LOGIC_VECTOR(0 TO 10);
+        output_data : OUT STD_LOGIC_VECTOR(0 TO 14));
+END ENTITY hamming_code;
+
+ARCHITECTURE DataFlow OF hamming_code IS
+
+SIGNAL D:STD_LOGIC_VECTOR(1 TO 11);
+SIGNAL P1_Internal:STD_LOGIC;
+SIGNAL p2_Internal:STD_LOGIC;
+SIGNAL p4_Internal:STD_LOGIC;
+SIGNAL p8_Internal:STD_LOGIC;
+
+BEGIN 
+  D(1 to 11)<=input_data(0 to 10);
+  p1_Internal<=NOT((((D(1) XNOR D(2))XNOR(D(4) XNOR D(5)))XNOR(D(7) XNOR(D(9)  XNOR D(11)))));
+  P2_Internal<=NOT((((D(1) XNOR D(3))XNOR(D(4) XNOR D(6)))XNOR(D(7) XNOR(D(10) XNOR D(11)))));
+  P4_Internal<=NOT((((D(2) XNOR D(3))XNOR(D(4) XNOR D(8)))XNOR(D(9) XNOR(D(10) XNOR D(11)))));
+  P8_Internal<=NOT((((D(5) XNOR D(6))XNOR(D(7) XNOR D(8)))XNOR(D(9) XNOR(D(10) XNOR D(11)))));
+  
+  output_data(0)<=P1_Internal;
+  output_data(1)<=P2_Internal;
+  output_data(2)<=D(1);
+  output_data(3)<=P4_Internal; 
+  output_data(4 to 6)<=D(2 to 4);
+  output_data(7)<=P8_Internal;
+  output_data(8 to 14)<=D(5 to 11);
+  
+END ARCHITECTURE DataFlow;
